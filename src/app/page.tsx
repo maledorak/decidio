@@ -1,24 +1,24 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { DialogItem } from "../types";
+import { actorMapsToVoices } from "@/config";
 
 
-const voicesMap = {
-  'narrator': 'tarun',
-  'Chief_of_Staff': 'angry',
-  'National_Security_Advisor': 'harry',
-  'Secretary_of_Defense':'roger',
-  'Foreign_Minister':'oxley',
-  'Press_Secretar':'espero'
-}
+export default function Home() {
+  const voiceMap = actorMapsToVoices['crisis'];
 
-export default function AudioStreamingPage() {
-  const [isGenerating, setIsGenerating] = useState(false);
+  // Recording state
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingError, setRecordingError] = useState<string | null>(null);
+  const recordingStreamRef = useRef<MediaStream | null>(null);
+
+  // Audio generation state
   const [isPlaying, setIsPlaying] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [message, setMessage] = useState("This is an example message");
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [audioGenError, setAudioGenError] = useState<string | null>(null);
+  const audioGenRef = useRef<HTMLAudioElement | null>(null);
 
+  // Dialog generation state
+  const [isGenerating, setIsGenerating] = useState(false);
   const [dialog, setDialog] = useState<DialogItem[]>([]);
 
   const startGenerateDialog = async () => {
@@ -38,13 +38,13 @@ export default function AudioStreamingPage() {
 
   const startAudioStream = async (_dialog: DialogItem[]) => {
     if (!_dialog) {
-      setError("Please generate a dialog first.");
+      setAudioGenError("Please generate a dialog first.");
       return;
     }
 
     try {
       setIsPlaying(true);
-      setError(null);
+      setAudioGenError(null);
 
       // Create a new AbortController to allow cancellation
       const abortController = new AbortController();
@@ -83,13 +83,13 @@ export default function AudioStreamingPage() {
       const audioUrl = URL.createObjectURL(blob);
 
       // Play the audio
-      if (audioRef.current) {
-        audioRef.current.src = audioUrl;
-        audioRef.current.play();
+      if (audioGenRef.current) {
+        audioGenRef.current.src = audioUrl;
+        audioGenRef.current.play();
       }
 
       // Cleanup
-      audioRef.current?.addEventListener("ended", () => {
+      audioGenRef.current?.addEventListener("ended", () => {
         setIsPlaying(false);
         URL.revokeObjectURL(audioUrl);
       });
@@ -98,15 +98,15 @@ export default function AudioStreamingPage() {
         // Fetch aborted
         return;
       }
-      setError(err instanceof Error ? err.message : "An error occurred");
+      setAudioGenError(err instanceof Error ? err.message : "An error occurred");
       setIsPlaying(false);
     }
   };
 
   const stopAudio = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.src = "";
+    if (audioGenRef.current) {
+      audioGenRef.current.pause();
+      audioGenRef.current.src = "";
     }
     setIsPlaying(false);
   };
@@ -123,9 +123,25 @@ export default function AudioStreamingPage() {
     await startAudioStream(dialogg);
   }
 
-  const record = () => {
+  const startRecording = async () => {
+    console.log('Start recording');
+    setIsRecording(true);
+    setRecordingError(null);
+
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    recordingStreamRef.current = stream;
 
   }
+
+  const stopRecording = async () => {
+    console.log('Stop recording');
+    if (recordingStreamRef.current) {
+      recordingStreamRef.current.getTracks().forEach((track) => {
+        track.stop();
+      });
+    }
+  }
+
 
   return (
   <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
@@ -137,9 +153,11 @@ export default function AudioStreamingPage() {
           Run
         </button>
 
-        <button onClick={record}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-          Record
+        <button
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          onClick={isRecording ? stopRecording : startRecording}
+        >
+          {isRecording ? "Stop Recording" : "Start Recording"}
         </button>
 
         {/* <button onClick={startGenerateDialog}
@@ -156,12 +174,12 @@ export default function AudioStreamingPage() {
           {isPlaying ? "Stop Audio" : "Play Audio"}
         </button> */}
 
-        {error && (
-          <div className="p-4 bg-red-100 text-red-700 rounded">{error}</div>
+        {audioGenError && (
+          <div className="p-4 bg-red-100 text-red-700 rounded">{audioGenError}</div>
         )}
       </div>
 
-      <audio ref={audioRef} hidden />
+      <audio ref={audioGenRef} hidden />
     </main>
   </div>
   );
