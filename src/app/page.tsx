@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 export default function Home() {
   const handleClick = async (e) => {
     console.log('Generate');
-    const out = await fetch('/api/llm', {
+    const out = await fetch('/api/llm/crisis', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

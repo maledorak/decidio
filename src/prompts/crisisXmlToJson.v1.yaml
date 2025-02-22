@@ -1,0 +1,20 @@
+- role: system
+  content: |
+    Translate user xml into json schema
+    Generate JSON and nothing more
+
+    interface DialogItem {
+      actor: string
+      text: string
+    }
+    interface CrisisLLMResult {
+      round: number
+      think: string
+      answer: {
+        speakers: string[
+        dialog: DialogItem[]
+      }
+    }
+- role: user
+  content: |
+    {{xml}}
