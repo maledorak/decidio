@@ -34,7 +34,7 @@ export default function Index() {
   return (
     <div className="h-screen bg-background text-foreground p-4 flex items-center justify-center bg-gradient-to-b from-black to-muted">
       <div className="max-w-3xl w-full relative">
-        <div className="absolute inset-0 bg-primary/5 blur-[100px] rounded-full animate-float" />
+        <div className="absolute inset-0 bg-crisis-red/5 blur-[100px] rounded-full animate-float" />
         
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
@@ -60,8 +60,8 @@ export default function Index() {
             <TooltipTrigger asChild>
               <motion.div variants={itemVariants}>
                 <Card className="group relative p-6 text-left transition-all hover:bg-accent/10">
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg" />
-                  <Shield className="w-8 h-8 mb-3 text-primary" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-crisis-red/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg" />
+                  <Shield className="w-8 h-8 mb-3 text-crisis-red" />
                   <h2 className="text-lg font-bold mb-2">Nuclear Crisis</h2>
                   <p className="text-xs text-muted-foreground">
                     Lead the nation through an imminent nuclear threat. Every second counts.
@@ -80,7 +80,7 @@ export default function Index() {
           </Tooltip>
 
           <motion.div variants={itemVariants}>
-            <Card className="group relative p-6 text-left transition-all hover:bg-accent/10">
+            <Card className="group relative p-6 text-left transition-all hover:bg-crisis-red/10">
               <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg" />
               <TrendingDown className="w-8 h-8 mb-3 text-secondary" />
               <h2 className="text-lg font-bold mb-2">Black Monday</h2>

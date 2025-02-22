@@ -10,6 +10,13 @@ export default {
   theme: {
   	extend: {
   		colors: {
+        crisis: {
+          red: 'hsl(var(--crisis-red))',
+          dark: 'hsl(var(--crisis-dark))',
+          light: 'hsl(var(--crisis-light))',
+          accent: 'hsl(var(--crisis-accent))',
+          muted: 'hsl(var(--crisis-muted))'
+        },
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
