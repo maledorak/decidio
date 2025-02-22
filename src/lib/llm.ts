@@ -9,18 +9,13 @@ export type SystemMessage = {
   content: string
 }
 
-export type CompletionMessage = {
-  role: 'user' | 'assistant'
-  content: string
-}
-
-// export type PromptMessages = SystemMessage | CompletionMessage
+type YamlMessages = MessageParam[] | SystemMessage[]
 
 export function loadAnthropicMessages(name: string, vars: Record<string, string> = {}) {
   const filePath = path.join(process.cwd(), 'src', 'prompts', `${name}.yaml`)
   const fileContents = fs.readFileSync(filePath, 'utf8')
-  const rawMessages = yaml.parse(fileContents)
-  rawMessages.forEach((message) => {
+  const yamlMessages: YamlMessages = yaml.parse(fileContents)
+  yamlMessages.forEach((message: SystemMessage | MessageParam) => {
     message.content = Handlebars.compile(message.content)(vars)
   })
 
@@ -28,7 +23,7 @@ export function loadAnthropicMessages(name: string, vars: Record<string, string>
     system: '',
     rest: [] as MessageParam[]
   }
-  for (const message of rawMessages) {
+  for (const message of yamlMessages) {
     if (message.role === 'system') {
       messages['system'] = message.content
     } else {
