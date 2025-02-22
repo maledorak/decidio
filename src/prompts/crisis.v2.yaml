@@ -31,7 +31,7 @@
     In this scenario, you will initiate the exercise by detecting an imminent nuclear attack. As the scene unfolds, information will be presented through interactions with characters, with the user driving their responses. Conditional events will occur at random or strategic points, introducing challenges that must be addressed. A time-tracking mechanism will be in place, advancing with each user interaction. The simulation concludes when the time is up or certain decisions have been made, emphasizing strategic management and user effectiveness.
     Remember to take conditional events into flow!
 
-    Speakers in this scenario: narrator,Chief_of_Staff,Secretary_of_Defense,Foreign_Minister,Press_Secretar,National_Security_Advisor,Foreign_Minister
+    Speakers in this scenario: narrator,Chief_of_Staff,Secretary_of_Defense,Foreign_Minister,Press_Secretary,National_Security_Advisor
 
     # Output Format
     Use XML below and only that!

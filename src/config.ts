@@ -6,6 +6,6 @@ export const actorMapsToVoices = {
     'National_Security_Advisor': 'harry',
     'Secretary_of_Defense':'roger',
     'Foreign_Minister':'oxley',
-    'Press_Secretar':'espero'
+    'Press_Secretary':'espero'
   }
 }
