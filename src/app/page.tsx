@@ -1,10 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
+import { Shield, TrendingDown, Headset, Settings } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import Link from "next/link";
-import { Shield, TrendingDown, Headset, Settings } from "lucide-react";
 
 export default function Index() {
   const containerVariants = {
@@ -34,8 +34,8 @@ export default function Index() {
     <div className="h-screen bg-crisis-dark text-crisis-light p-4 flex items-center justify-center bg-gradient-to-b from-black to-crisis-dark">
       <div className="max-w-3xl w-full relative">
         <div className="absolute inset-0 bg-crisis-red/5 blur-[100px] rounded-full animate-float" />
-        
-        <motion.div 
+
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: "easeOut" }}
@@ -48,8 +48,8 @@ export default function Index() {
             Simulate critical scenarios. Make impactful decisions. Handle the consequences.
           </p>
         </motion.div>
-        
-        <motion.div 
+
+        <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -58,14 +58,16 @@ export default function Index() {
           <Tooltip>
             <TooltipTrigger asChild>
               <motion.div variants={itemVariants}>
-                <Card className="group relative p-6 text-left crisis-button glass-panel cursor-pointer">
+                <Link href="/scenarios/nuclear-crisis">
+                  <Card className="group relative p-6 text-left crisis-button glass-panel cursor-pointer">
                   <div className="absolute inset-0 bg-gradient-to-r from-crisis-red/20 to-crisis-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
                   <Shield className="w-8 h-8 mb-3 text-crisis-red" />
                   <h2 className="text-lg font-bold mb-2">Nuclear Crisis</h2>
                   <p className="text-xs text-muted-foreground">
                     Lead the nation through an imminent nuclear threat. Every second counts.
                   </p>
-                </Card>
+                  </Card>
+                </Link>
               </motion.div>
             </TooltipTrigger>
             <TooltipContent side="top">
@@ -74,36 +76,42 @@ export default function Index() {
           </Tooltip>
 
           <motion.div variants={itemVariants}>
-            <Card className="group relative p-6 text-left crisis-button glass-panel cursor-pointer">
+            <Link href="/scenarios/market-crisis">
+              <Card className="group relative p-6 text-left crisis-button glass-panel cursor-pointer">
               <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-yellow-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
               <TrendingDown className="w-8 h-8 mb-3 text-orange-500" />
               <h2 className="text-lg font-bold mb-2">Black Monday</h2>
               <p className="text-xs text-muted-foreground">
                 Navigate a devastating market crash. Make decisions to stabilize the economy.
               </p>
-            </Card>
+              </Card>
+            </Link>
           </motion.div>
 
           <motion.div variants={itemVariants}>
-            <Card className="group relative p-6 text-left crisis-button glass-panel cursor-pointer">
+            <Link href="/scenarios/emergency-center">
+              <Card className="group relative p-6 text-left crisis-button glass-panel cursor-pointer">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
               <Headset className="w-8 h-8 mb-3 text-blue-500" />
               <h2 className="text-lg font-bold mb-2">Emergency Call Center</h2>
               <p className="text-xs text-muted-foreground">
                 Manage critical emergency calls. Coordinate response teams effectively.
               </p>
-            </Card>
+              </Card>
+            </Link>
           </motion.div>
 
           <motion.div variants={itemVariants}>
-            <Card className="group relative p-6 text-left crisis-button glass-panel cursor-pointer">
+            <Link href="/scenarios/custom">
+              <Card className="group relative p-6 text-left crisis-button glass-panel cursor-pointer">
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
               <Settings className="w-8 h-8 mb-3 text-purple-500" />
               <h2 className="text-lg font-bold mb-2">Custom Scenario</h2>
               <p className="text-xs text-muted-foreground">
                 Create your own crisis scenario. Define the parameters and challenges.
               </p>
-            </Card>
+              </Card>
+            </Link>
           </motion.div>
         </motion.div>
 
