@@ -1,6 +1,6 @@
 
 export const actorMapsToVoices = {
-  crisis: {
+  "nuclear-crisis": {
     'narrator': 'tarun',
     'Chief_of_Staff': 'angry',
     'National_Security_Advisor': 'harry',
