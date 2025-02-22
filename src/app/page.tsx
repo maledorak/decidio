@@ -6,8 +6,18 @@ import { actorMapsToVoices } from "@/config";
 export default function Home() {
   const voicesMap = actorMapsToVoices['crisis'];
 
+  // Flow state
+  const [currentStep, setCurrentStep] = useState<'idle' | 'generating' | 'playing' | 'recording'>('idle');
+
+  // Dialog generation state
+  const [dialog, setDialog] = useState<DialogItem[]>([]);
+  const [generationError, setGenerationError] = useState<string | null>(null);
+
+  // Audio playback state
+  const [audioError, setAudioError] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
   // Recording state
-  const [isRecording, setIsRecording] = useState(false);
   const [recordingError, setRecordingError] = useState<string | null>(null);
   const [recordingProcessing, setRecordingProcessing] = useState(false);
   const [recordingTranscript, setRecordingTranscript] = useState('');
@@ -15,63 +25,43 @@ export default function Home() {
   const recordingChunksRef = useRef<Blob[]>([]);
   const recordingMediaRecorderRef = useRef<MediaRecorder | null>(null);
 
-  // Audio generation state
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [audioGenError, setAudioGenError] = useState<string | null>(null);
-  const audioGenRef = useRef<HTMLAudioElement | null>(null);
-
-  // Dialog generation state
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [dialog, setDialog] = useState<DialogItem[]>([]);
-
-  const startGenerateDialog = async () => {
-    setIsGenerating(true);
-    console.log("Generating dialog...");
-    const response = await fetch("/api/llm/crisis", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await response.json();
-    setDialog(data.text.answer.dialog);
-    console.log("Dialog generated:", data.text.answer.dialog);
-    return data.text.answer.dialog;
-  }
-
-  const startAudioStream = async (_dialog: DialogItem[]) => {
-    if (!_dialog) {
-      setAudioGenError("Please generate a dialog first.");
-      return;
-    }
-
+  const generateDialog = async (): Promise<DialogItem[]> => {
     try {
-      setIsPlaying(true);
-      setAudioGenError(null);
+      setGenerationError(null);
+      setCurrentStep('generating');
 
-      // Create a new AbortController to allow cancellation
-      const abortController = new AbortController();
+      const response = await fetch("/api/llm/crisis", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) throw new Error('Failed to generate dialog');
+
+      const data = await response.json();
+      const newDialog = data.text.answer.dialog;
+      setDialog(newDialog);
+      return newDialog;
+    } catch (error) {
+      setGenerationError(error instanceof Error ? error.message : 'Failed to generate dialog');
+      throw error;
+    }
+  };
+
+  const playAudioStream = async (dialogData: DialogItem[]) => {
+    try {
+      setAudioError(null);
+      setCurrentStep('playing');
 
       const response = await fetch("/api/stream/tts", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ voicesMap, dialog: _dialog }),
-        signal: abortController.signal,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ voicesMap, dialog: dialogData }),
       });
 
-      if (!response.body) {
-        throw new Error("No response body");
+      if (!response.ok || !response.body) {
+        throw new Error("Audio generation failed");
       }
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "An error occurred");
-      }
-
-      // Create a blob from the response stream
-      const contentType = response.headers.get("Content-Type") || "audio/mpeg";
       const reader = response.body.getReader();
       const chunks: Uint8Array[] = [];
 
@@ -81,59 +71,33 @@ export default function Home() {
         chunks.push(value);
       }
 
-      // Combine chunks into a single blob
-      const blob = new Blob(chunks, { type: contentType });
+      const blob = new Blob(chunks, { type: response.headers.get("Content-Type") || "audio/mpeg" });
       const audioUrl = URL.createObjectURL(blob);
 
-      // Play the audio
-      if (audioGenRef.current) {
-        audioGenRef.current.src = audioUrl;
-        audioGenRef.current.play();
-      }
+      if (audioRef.current) {
+        audioRef.current.src = audioUrl;
+        await audioRef.current.play();
 
-      // Cleanup
-      audioGenRef.current?.addEventListener("ended", () => {
-        setIsPlaying(false);
-        URL.revokeObjectURL(audioUrl);
-      });
-    } catch (err) {
-      if ((err as any).name === "AbortError") {
-        // Fetch aborted
-        return;
+        return new Promise<void>((resolve) => {
+          if (audioRef.current) {
+            audioRef.current.onended = () => {
+              URL.revokeObjectURL(audioUrl);
+              resolve();
+            };
+          }
+        });
       }
-      setAudioGenError(err instanceof Error ? err.message : "An error occurred");
-      setIsPlaying(false);
+    } catch (error) {
+      setAudioError(error instanceof Error ? error.message : 'Audio playback failed');
+      throw error;
     }
   };
-
-  const stopAudio = () => {
-    if (audioGenRef.current) {
-      audioGenRef.current.pause();
-      audioGenRef.current.src = "";
-    }
-    setIsPlaying(false);
-  };
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      stopAudio();
-      if (recordingStreamRef.current) {
-        recordingStreamRef.current.getTracks().forEach((track) => track.stop());
-      }
-    };
-  }, []);
-
-  const run = async () => {
-    const dialogg = await startGenerateDialog();
-    await startAudioStream(dialogg);
-  }
 
   const startRecording = async () => {
     try {
-      console.log('Start recording');
       recordingChunksRef.current = [];
       setRecordingError(null);
+      setCurrentStep('recording');
 
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       recordingStreamRef.current = stream;
@@ -166,51 +130,102 @@ export default function Home() {
             setRecordingTranscript(data.text);
           }
         } catch (error) {
-          console.error('Error sending audio to API:', error);
           setRecordingError('Failed to transcribe audio');
         } finally {
           setRecordingProcessing(false);
+          setCurrentStep('idle');
         }
       };
 
       mediaRecorder.start();
       recordingMediaRecorderRef.current = mediaRecorder;
-      setIsRecording(true);
     } catch (error) {
-      console.error('Error starting recording:', error);
       setRecordingError('Failed to start recording');
+      setCurrentStep('idle');
     }
   };
 
-  const stopRecording = async () => {
-    console.log('Stop recording');
+  const stopRecording = () => {
     if (recordingMediaRecorderRef.current) {
       recordingMediaRecorderRef.current.stop();
     }
     if (recordingStreamRef.current) {
-      recordingStreamRef.current.getTracks().forEach((track) => {
-        track.stop();
-      });
+      recordingStreamRef.current.getTracks().forEach(track => track.stop());
     }
-    setIsRecording(false);
   };
+
+  const handleStart = async () => {
+    try {
+      const dialogData = await generateDialog();
+      await playAudioStream(dialogData);
+      setCurrentStep('idle'); // Return to idle state after audio finishes
+    } catch (error) {
+      setCurrentStep('idle');
+    }
+  };
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = "";
+      }
+      if (recordingStreamRef.current) {
+        recordingStreamRef.current.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, []);
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
         <div className="flex flex-col space-y-4">
-          <button onClick={run}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-            Run
-          </button>
+          {/* Main control button */}
+          {currentStep === 'idle' && !recordingTranscript && (
+            <button
+              onClick={handleStart}
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              Start
+            </button>
+          )}
 
-          <button
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed"
-            onClick={isRecording ? stopRecording : startRecording}
-            disabled={recordingProcessing}
-          >
-            {isRecording ? "Stop Recording" : "Start Recording"}
-          </button>
+          {/* Start Speaking button */}
+          {currentStep === 'idle' && recordingTranscript === '' && dialog.length > 0 && (
+            <button
+              onClick={startRecording}
+              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+            >
+              Start Speaking
+            </button>
+          )}
+
+          {/* Recording control button */}
+          {currentStep === 'recording' && (
+            <button
+              onClick={stopRecording}
+              className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+              disabled={recordingProcessing}
+            >
+              Stop Speaking
+            </button>
+          )}
+
+          {/* Status indicators */}
+          {currentStep === 'generating' && (
+            <div className="flex items-center text-gray-600">
+              <div className="animate-spin mr-2 h-5 w-5 border-t-2 border-b-2 border-gray-900 rounded-full"></div>
+              Generating dialog...
+            </div>
+          )}
+
+          {currentStep === 'playing' && (
+            <div className="flex items-center text-gray-600">
+              <div className="animate-spin mr-2 h-5 w-5 border-t-2 border-b-2 border-gray-900 rounded-full"></div>
+              Playing audio...
+            </div>
+          )}
 
           {recordingProcessing && (
             <div className="flex items-center text-gray-600">
@@ -219,10 +234,20 @@ export default function Home() {
             </div>
           )}
 
+          {/* Error messages */}
+          {generationError && (
+            <div className="p-4 bg-red-100 text-red-700 rounded">{generationError}</div>
+          )}
+
+          {audioError && (
+            <div className="p-4 bg-red-100 text-red-700 rounded">{audioError}</div>
+          )}
+
           {recordingError && (
             <div className="p-4 bg-red-100 text-red-700 rounded">{recordingError}</div>
           )}
 
+          {/* Transcription result */}
           {recordingTranscript && (
             <div className="mt-6">
               <h2 className="text-xl font-semibold mb-3">Transcription:</h2>
@@ -231,13 +256,9 @@ export default function Home() {
               </div>
             </div>
           )}
-
-          {audioGenError && (
-            <div className="p-4 bg-red-100 text-red-700 rounded">{audioGenError}</div>
-          )}
         </div>
 
-        <audio ref={audioGenRef} hidden />
+        <audio ref={audioRef} hidden />
       </main>
     </div>
   );
