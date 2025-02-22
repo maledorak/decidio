@@ -2,19 +2,7 @@ import { NextRequest } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk';
 import { loadAnthropicMessages } from '@/lib/llm';
 
-interface DialogItem {
-  actor: string;
-  text: string;
-}
 
-interface CrisisLLMResult {
-  round: number;
-  think: string;
-  answer: {
-    speakers: string[];
-    dialog: DialogItem[];
-  };
-};
 
 export async function POST(req: NextRequest) {
   const client = new Anthropic({

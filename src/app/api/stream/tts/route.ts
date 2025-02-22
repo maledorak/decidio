@@ -20,7 +20,6 @@ export async function POST(req: NextRequest) {
   });
 
   try {
-    // Parse the request body to get the text and voiceId
     const { dialog, voicesMap }: RequestInput = await req.json();
 
     if (!dialog || !voicesMap) {
@@ -64,6 +63,9 @@ export async function POST(req: NextRequest) {
               text: item.text,
               model_id: "eleven_multilingual_v2",
               output_format: "mp3_44100_64",
+              // voice_settings: {
+              //   use_speaker_boost: true
+              // },
             }
           );
 
@@ -72,46 +74,6 @@ export async function POST(req: NextRequest) {
             controller.enqueue(chunk);
           }
         }
-
-        // const audioStream1 = await elevenlabs.textToSpeech.convertAsStream(
-        //   '9BWtsMINqrJLrRacOk9x',
-        //   {
-        //     text: "Cheść co u Ciebie",
-        //     model_id: "eleven_multilingual_v2",
-        //     output_format: "mp3_44100_128",
-        //   }
-        // );
-
-        // // Read the audio stream and enqueue chunks
-        // for await (const chunk of audioStream1) {
-        //   controller.enqueue(chunk);
-        // }
-
-        // const audioStream2 = await elevenlabs.textToSpeech.convertAsStream(
-        //   'JBFqnCBsd6RMkjVDRZzb',
-        //   {
-        //     text: "Dwa jeden trzy siedem",
-        //     model_id: "eleven_multilingual_v2",
-        //     output_format: "mp3_44100_128",
-        //   }
-        // );
-
-        // Read the audio stream and enqueue chunks
-        // for await (const chunk of audioStream2) {
-        //   controller.enqueue(chunk);
-        // }
-
-        // const audioStream = new ReadableStream({
-        //   async start(controller) {
-        //     for await (const chunk of audioStream1) {
-        //       controller.enqueue(chunk);
-        //     }
-        //     for await (const chunk of audioStream2) {
-        //       controller.enqueue(chunk);
-        //     }
-        //   },
-        // })
-
 
       } catch (error) {
         controller.error(error);

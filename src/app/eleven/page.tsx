@@ -1,59 +1,44 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { DialogItem } from "../types";
 
-// const dialog = [
-//   {
-//     'actor': 'narrator',
-//     'text': 'Jest spokojne wtorkowe popołudnie w Gabinecie Owalnym. Nagle, drzwi otwierają się z impetem. Do środka wbiega Szef Sztabu wraz z Doradcą ds. Bezpieczeństwa Narodowego. Ich twarze są blade, a oddech przyspieszony.'
-//   },
-//   {
-//     'actor': 'Szef_Sztabu',
-//     'text': 'Panie Prezydencie! Mamy sytuację kryzysową najwyższego priorytetu! Systemy wczesnego ostrzegania NORAD wykryły właśnie start trzech pocisków balistycznych z terytorium Korei Północnej!'
-//   },
-//   {
-//     'actor': 'Doradca_Bezpieczeństwa',
-//     'text': 'Według wstępnych analiz, trajektoria wskazuje na możliwy cel w postaci zachodniego wybrzeża Stanów Zjednoczonych. Szacowany czas do potencjalnego uderzenia: 28 minut. Musimy natychmiast podjąć działania!'
-//   },
-//   {
-//     'actor': 'narrator',
-//     'text': 'Na biurku przed Tobą rozbrzmiewa czerwony telefon, a na ekranach w pomieszczeniu pojawiają się mapy z oznaczonymi trajektoriami pocisków. Personel czeka na Twoje pierwsze polecenia.'
-//   }
-// ]
-
-const dialog = [
-  {
-    'actor': 'narrator',
-    'text': 'It\'s a quiet Tuesday afternoon in the Oval Office. Suddenly, the door bursts open. The Chief of Staff rushes in along with the National Security Advisor. Their faces are pale, and their breathing is rapid.'
-  },
-  {
-    'actor': 'Chief_of_Staff',
-    'text': 'Mr. President! We have a highest priority crisis situation! NORAD early warning systems have just detected the launch of three ballistic missiles from North Korean territory!'
-  },
-  {
-    'actor': 'Security_Advisor',
-    'text': 'According to preliminary analysis, the trajectory indicates a possible target on the west coast of the United States. Estimated time to potential impact: 28 minutes. We must take immediate action!'
-  },
-  {
-    'actor': 'narrator',
-    'text': 'The red phone on your desk starts ringing, and the screens in the room display maps with marked missile trajectories. The staff awaits your first orders.'
-  }
-]
 
 const voicesMap = {
-  'narrator': 'roger',
-  'Chief_of_Staff': 'charlie',
-  'Security_Advisor': 'gorge'
+  'narrator': 'tarun',
+  'Chief_of_Staff': 'angry',
+  'National_Security_Advisor': 'harry',
+  'Secretary_of_Defense':'roger',
+  'Foreign_Minister':'oxley',
+  'Press_Secretar':'espero'
 }
 
 export default function AudioStreamingPage() {
+  const [isGenerating, setIsGenerating] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState("This is an example message");
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const startAudioStream = async () => {
-    if (!message.trim()) {
-      setError("Please enter a message.");
+  const [dialog, setDialog] = useState<DialogItem[]>([]);
+
+  const startGenerateDialog = async () => {
+    setIsGenerating(true);
+    console.log("Generating dialog...");
+    const response = await fetch("/api/llm/crisis", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    setDialog(data.text.answer.dialog);
+    console.log("Dialog generated:", data.text.answer.dialog);
+    return data.text.answer.dialog;
+  }
+
+  const startAudioStream = async (_dialog: DialogItem[]) => {
+    if (!_dialog) {
+      setError("Please generate a dialog first.");
       return;
     }
 
@@ -69,7 +54,7 @@ export default function AudioStreamingPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ voicesMap, dialog }),
+        body: JSON.stringify({ voicesMap, dialog: _dialog }),
         signal: abortController.signal,
       });
 
@@ -133,6 +118,11 @@ export default function AudioStreamingPage() {
     };
   }, []);
 
+  const run = async () => {
+    const dialogg = await startGenerateDialog();
+    await startAudioStream(dialogg);
+  }
+
   return (
     <main className="min-h-screen p-8 max-w-2xl mx-auto">
       <h1 className="text-3xl font-bold mb-6">Hack</h1>
@@ -147,14 +137,24 @@ export default function AudioStreamingPage() {
           disabled={isPlaying}
         />
 
-        <button
+        <button onClick={run}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+          Run
+        </button>
+
+        {/* <button onClick={startGenerateDialog}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+          Generate dialog
+        </button> */}
+
+        {/* <button
           onClick={isPlaying ? stopAudio : startAudioStream}
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600
                      disabled:bg-blue-300 disabled:cursor-not-allowed"
           disabled={isPlaying && !message}
         >
           {isPlaying ? "Stop Audio" : "Play Audio"}
-        </button>
+        </button> */}
 
         {error && (
           <div className="p-4 bg-red-100 text-red-700 rounded">{error}</div>
