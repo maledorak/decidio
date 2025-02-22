@@ -47,8 +47,8 @@ export async function POST(req: NextRequest) {
       },
     });
   }
-
-  const jsonOutput = JSON.parse(jsonResult.text);
+  const rawJson = jsonResult.text.replace('```json', '').replace('```', '');
+  const jsonOutput = JSON.parse(rawJson);
   console.log(jsonOutput);
 
   return new Response(JSON.stringify({ text: jsonOutput }), {
