@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import yaml from 'yaml'
 import Handlebars from "handlebars";
+import { type MessageParam } from '@anthropic-ai/sdk/resources/messages/messages';
 
 export type SystemMessage = {
   role: 'system'
@@ -25,7 +26,7 @@ export function loadAnthropicMessages(name: string, vars: Record<string, string>
 
   const messages = {
     system: '',
-    rest: []
+    rest: [] as MessageParam[]
   }
   for (const message of rawMessages) {
     if (message.role === 'system') {

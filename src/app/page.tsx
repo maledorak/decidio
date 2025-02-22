@@ -32,7 +32,7 @@ export default function Home() {
   const recordingChunksRef = useRef<Blob[]>([]);
   const recordingMediaRecorderRef = useRef<MediaRecorder | null>(null);
 
-  const generateDialog = async (messages: MessageParam[]): Promise<GenerateDialogResult> => {
+  const generateDialog = async (messages: MessageParam[]): Promise<GenerateDialogResult | undefined> => {
     if (currentStep !== 'idle') return;
     try {
       setGenerationError(null);
@@ -172,6 +172,7 @@ export default function Home() {
   const handleStart = async (messagesToUse: MessageParam[]) => {
     try {
       const dialogResult = await generateDialog(messagesToUse);
+      if (!dialogResult) return;
       await playAudioStream(dialogResult.dialog);
       setCurrentStep('idle'); // Return to idle state after audio finishes
     } catch (error) {
