@@ -1,25 +1,41 @@
 import { NextRequest } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk';
+import { type MessageParam } from '@anthropic-ai/sdk/resources/messages/messages';
 import { loadAnthropicMessages } from '@/lib/llm';
 
+
+interface RequestInput {
+  previousMsgs: MessageParam[];
+}
 
 export async function POST(req: NextRequest) {
   const client = new Anthropic({
     apiKey: process.env['ANTHROPIC_API_KEY'],
   });
 
+  let { previousMsgs }: RequestInput = await req.json();
+  if (previousMsgs.length === 0) {
+    previousMsgs = [{
+      role: 'user',
+      content: '.' // because Anthropic like vendor lock-in and wants to be different from OpenAI standards...
+    }];
+  }
+
+  console.log('previousMsg', previousMsgs);
+
   const crisisMessages = loadAnthropicMessages('crisis.v2')
 
   console.log(crisisMessages);
   const crisisCompletion = await client.messages.create({
+    system: crisisMessages.system,
     max_tokens: 8192,
     temperature: 1,
-    messages: crisisMessages.rest,
+    messages: previousMsgs,
     model: 'claude-3-5-sonnet-latest',
   });
 
-  const result = crisisCompletion.content[0];
-  if (result.type !== 'text') {
+  const crisisResult = crisisCompletion.content[0];
+  if (crisisResult.type !== 'text') {
     return new Response(JSON.stringify({ error: 'Unexpected response type' }), {
       status: 500,
       headers: {
@@ -28,7 +44,9 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  const jsonMessages = loadAnthropicMessages('crisisXmlToJson.v1', { xml: result.text });
+  const allMessages: MessageParam[] = [...previousMsgs, { role: 'assistant', content: crisisResult.text }];
+
+  const jsonMessages = loadAnthropicMessages('crisisXmlToJson.v1', { xml: crisisResult.text });
   const jsonCompletion = await client.messages.create({
     system: jsonMessages.system,
     max_tokens: 8192,
@@ -50,7 +68,7 @@ export async function POST(req: NextRequest) {
   const jsonOutput = JSON.parse(rawJson);
   console.log(jsonOutput);
 
-  return new Response(JSON.stringify({ text: jsonOutput }), {
+  return new Response(JSON.stringify({ latestJsonDialog: jsonOutput, allMessages }), {
     headers: {
       'Content-Type': 'application/json',
     },

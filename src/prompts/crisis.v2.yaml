@@ -1,4 +1,4 @@
-- role: user
+- role: system
   content: |
     Simulate a roleplay scenario where the user acts as the President of the United States and must respond to a simulated crisis involving a nuclear attack on the country. Clearly attribute dialogue to characters and mark all non-dialogue text as narration.
 

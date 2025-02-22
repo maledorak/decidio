@@ -1,7 +1,13 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { type MessageParam } from '@anthropic-ai/sdk/resources/messages/messages';
 import { DialogItem } from "../types";
 import { actorMapsToVoices } from "@/config";
+
+interface GenerateDialogResult {
+  dialog: DialogItem[];
+  allMessages: MessageParam[];
+}
 
 export default function Home() {
   const voicesMap = actorMapsToVoices['crisis'];
@@ -10,6 +16,7 @@ export default function Home() {
   const [currentStep, setCurrentStep] = useState<'idle' | 'generating' | 'playing' | 'recording'>('idle');
 
   // Dialog generation state
+  const [messages, setMessages] = useState<MessageParam[]>([]);
   const [dialog, setDialog] = useState<DialogItem[]>([]);
   const [generationError, setGenerationError] = useState<string | null>(null);
 
@@ -25,7 +32,7 @@ export default function Home() {
   const recordingChunksRef = useRef<Blob[]>([]);
   const recordingMediaRecorderRef = useRef<MediaRecorder | null>(null);
 
-  const generateDialog = async (): Promise<DialogItem[]> => {
+  const generateDialog = async (messages: MessageParam[]): Promise<GenerateDialogResult> => {
     try {
       setGenerationError(null);
       setCurrentStep('generating');
@@ -33,14 +40,19 @@ export default function Home() {
       const response = await fetch("/api/llm/crisis", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ previousMsgs: messages }),
       });
 
       if (!response.ok) throw new Error('Failed to generate dialog');
 
       const data = await response.json();
-      const newDialog = data.text.answer.dialog;
-      setDialog(newDialog);
-      return newDialog;
+      setDialog(data.latestJsonDialog.answer.dialog);
+      setMessages(data.allMessages);
+
+      return {
+        dialog: data.latestJsonDialog.answer.dialog,
+        allMessages: data.allMessages
+      };
     } catch (error) {
       setGenerationError(error instanceof Error ? error.message : 'Failed to generate dialog');
       throw error;
@@ -128,6 +140,7 @@ export default function Home() {
           const data = await response.json();
           if (data.text) {
             setRecordingTranscript(data.text);
+            setMessages([...messages, { role: 'user', content: data.text }]);
           }
         } catch (error) {
           setRecordingError('Failed to transcribe audio');
@@ -156,11 +169,12 @@ export default function Home() {
 
   const handleStart = async () => {
     try {
-      const dialogData = await generateDialog();
-      await playAudioStream(dialogData);
+      const dialogResult = await generateDialog(messages);
+      await playAudioStream(dialogResult.dialog);
       setCurrentStep('idle'); // Return to idle state after audio finishes
     } catch (error) {
       setCurrentStep('idle');
+      setGenerationError(error instanceof Error ? error.message : 'Generation failed');
     }
   };
 
