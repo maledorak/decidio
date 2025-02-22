@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import Link from "next/link";
@@ -59,18 +58,13 @@ export default function Index() {
           <Tooltip>
             <TooltipTrigger asChild>
               <motion.div variants={itemVariants}>
-                <Card className="group relative p-6 text-left transition-all hover:bg-crisis-red/10 bg-crisis-dark border-crisis-muted">
-                  <div className="absolute inset-0 bg-gradient-to-br from-crisis-red/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg" />
+                <Card className="group relative p-6 text-left crisis-button glass-panel cursor-pointer">
+                  <div className="absolute inset-0 bg-gradient-to-r from-crisis-red/20 to-crisis-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
                   <Shield className="w-8 h-8 mb-3 text-crisis-red" />
                   <h2 className="text-lg font-bold mb-2">Nuclear Crisis</h2>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-crisis-muted">
                     Lead the nation through an imminent nuclear threat. Every second counts.
                   </p>
-                  <Button asChild variant="ghost" className="mt-4 w-full">
-                    <Link href="/scenarios/nuclear-crisis">
-                      Start Simulation
-                    </Link>
-                  </Button>
                 </Card>
               </motion.div>
             </TooltipTrigger>
@@ -80,44 +74,35 @@ export default function Index() {
           </Tooltip>
 
           <motion.div variants={itemVariants}>
-            <Card className="group relative p-6 text-left transition-all hover:bg-crisis-red/10">
-              <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg" />
-              <TrendingDown className="w-8 h-8 mb-3 text-secondary" />
+            <Card className="group relative p-6 text-left crisis-button glass-panel cursor-pointer">
+              <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-yellow-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
+              <TrendingDown className="w-8 h-8 mb-3 text-orange-500" />
               <h2 className="text-lg font-bold mb-2">Black Monday</h2>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-crisis-muted">
                 Navigate a devastating market crash. Make decisions to stabilize the economy.
               </p>
-              <Button variant="ghost" className="mt-4 w-full" disabled>
-                Coming Soon
-              </Button>
             </Card>
           </motion.div>
 
           <motion.div variants={itemVariants}>
-            <Card className="group relative p-6 text-left transition-all hover:bg-accent/10">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg" />
+            <Card className="group relative p-6 text-left crisis-button glass-panel cursor-pointer">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
               <Headset className="w-8 h-8 mb-3 text-blue-500" />
               <h2 className="text-lg font-bold mb-2">Emergency Call Center</h2>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-crisis-muted">
                 Manage critical emergency calls. Coordinate response teams effectively.
               </p>
-              <Button variant="ghost" className="mt-4 w-full" disabled>
-                Coming Soon
-              </Button>
             </Card>
           </motion.div>
 
           <motion.div variants={itemVariants}>
-            <Card className="group relative p-6 text-left transition-all hover:bg-accent/10">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg" />
+            <Card className="group relative p-6 text-left crisis-button glass-panel cursor-pointer">
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
               <Settings className="w-8 h-8 mb-3 text-purple-500" />
               <h2 className="text-lg font-bold mb-2">Custom Scenario</h2>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-crisis-muted">
                 Create your own crisis scenario. Define the parameters and challenges.
               </p>
-              <Button variant="ghost" className="mt-4 w-full" disabled>
-                Coming Soon
-              </Button>
             </Card>
           </motion.div>
         </motion.div>
