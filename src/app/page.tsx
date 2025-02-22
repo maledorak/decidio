@@ -33,6 +33,7 @@ export default function Home() {
   const recordingMediaRecorderRef = useRef<MediaRecorder | null>(null);
 
   const generateDialog = async (messages: MessageParam[]): Promise<GenerateDialogResult> => {
+    if (currentStep !== 'idle') return;
     try {
       setGenerationError(null);
       setCurrentStep('generating');
@@ -165,11 +166,12 @@ export default function Home() {
     if (recordingStreamRef.current) {
       recordingStreamRef.current.getTracks().forEach(track => track.stop());
     }
+    setRecordingTranscript('');
   };
 
-  const handleStart = async () => {
+  const handleStart = async (messagesToUse: MessageParam[]) => {
     try {
-      const dialogResult = await generateDialog(messages);
+      const dialogResult = await generateDialog(messagesToUse);
       await playAudioStream(dialogResult.dialog);
       setCurrentStep('idle'); // Return to idle state after audio finishes
     } catch (error) {
@@ -177,6 +179,20 @@ export default function Home() {
       setGenerationError(error instanceof Error ? error.message : 'Generation failed');
     }
   };
+
+  // Effect to handle auto-continue flow
+  useEffect(() => {
+    async function handleAutoContinue() {
+      if (currentStep === 'idle' && recordingTranscript) {
+        try {
+          await handleStart(messages);
+        } finally {
+          setRecordingTranscript('');
+        }
+      }
+    }
+    handleAutoContinue();
+  }, [currentStep, recordingTranscript, messages]); // Add messages dependency
 
   // Cleanup on unmount
   useEffect(() => {
@@ -198,7 +214,7 @@ export default function Home() {
           {/* Main control button */}
           {currentStep === 'idle' && !recordingTranscript && (
             <button
-              onClick={handleStart}
+              onClick={() => handleStart(messages)}
               className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
             >
               Start
