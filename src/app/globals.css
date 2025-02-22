@@ -13,41 +13,26 @@
     --crisis-accent: 0 100% 40%;
     --crisis-muted: 0 0% 20%;
 
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
-
-    --card-foreground: 0 0% 3.9%;
-
-    --popover: 0 0% 100%;
-
-    --popover-foreground: 0 0% 3.9%;
-
-    --primary: 0 0% 9%;
-
-    --primary-foreground: 0 0% 98%;
-
-    --secondary: 0 0% 96.1%;
-
-    --secondary-foreground: 0 0% 9%;
-
-    --muted: 0 0% 96.1%;
-
-    --muted-foreground: 0 0% 45.1%;
-
-    --accent: 0 0% 96.1%;
-
-    --accent-foreground: 0 0% 9%;
-
-    --destructive: 0 84.2% 60.2%;
-
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 0 0% 89.8%;
-
-    --input: 0 0% 89.8%;
-
-    --ring: 0 0% 3.9%;
+    /* Override default shadcn colors with crisis theme */
+    --background: var(--crisis-dark);
+    --foreground: var(--crisis-light);
+    --card: 0 0% 6%;
+    --card-foreground: var(--crisis-light);
+    --popover: var(--crisis-dark);
+    --popover-foreground: var(--crisis-light);
+    --primary: var(--crisis-red);
+    --primary-foreground: var(--crisis-light);
+    --secondary: 0 0% 13%;
+    --secondary-foreground: var(--crisis-light);
+    --muted: var(--crisis-muted);
+    --muted-foreground: 0 0% 80%;
+    --accent: var(--crisis-accent);
+    --accent-foreground: var(--crisis-light);
+    --destructive: var(--crisis-red);
+    --destructive-foreground: var(--crisis-light);
+    --border: var(--crisis-muted);
+    --input: var(--crisis-muted);
+    --ring: var(--crisis-red);
 
     --chart-1: 12 76% 61%;
 

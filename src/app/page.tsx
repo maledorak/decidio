@@ -32,7 +32,7 @@ export default function Index() {
   };
 
   return (
-    <div className="h-screen bg-background text-foreground p-4 flex items-center justify-center bg-gradient-to-b from-black to-muted">
+    <div className="h-screen bg-crisis-dark text-crisis-light p-4 flex items-center justify-center bg-gradient-to-b from-black to-crisis-dark">
       <div className="max-w-3xl w-full relative">
         <div className="absolute inset-0 bg-crisis-red/5 blur-[100px] rounded-full animate-float" />
         
@@ -45,7 +45,7 @@ export default function Index() {
           <h1 className="text-3xl md:text-5xl font-bold mb-3 animate-glow tracking-tight">
             decide.io
           </h1>
-          <p className="text-muted-foreground text-xs md:text-sm max-w-md mx-auto">
+          <p className="text-crisis-muted text-xs md:text-sm max-w-md mx-auto">
             Simulate critical scenarios. Make impactful decisions. Handle the consequences.
           </p>
         </motion.div>
@@ -59,7 +59,7 @@ export default function Index() {
           <Tooltip>
             <TooltipTrigger asChild>
               <motion.div variants={itemVariants}>
-                <Card className="group relative p-6 text-left transition-all hover:bg-accent/10">
+                <Card className="group relative p-6 text-left transition-all hover:bg-crisis-red/10 bg-crisis-dark border-crisis-muted">
                   <div className="absolute inset-0 bg-gradient-to-br from-crisis-red/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg" />
                   <Shield className="w-8 h-8 mb-3 text-crisis-red" />
                   <h2 className="text-lg font-bold mb-2">Nuclear Crisis</h2>
