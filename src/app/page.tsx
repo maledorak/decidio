@@ -44,7 +44,7 @@ export default function Index() {
           <h1 className="text-3xl md:text-5xl font-bold mb-3 animate-glow tracking-tight">
             decide.io
           </h1>
-          <p className="text-crisis-muted text-xs md:text-sm max-w-md mx-auto">
+          <p className="text-muted-foreground text-xs md:text-sm max-w-md mx-auto">
             Simulate critical scenarios. Make impactful decisions. Handle the consequences.
           </p>
         </motion.div>
@@ -62,7 +62,7 @@ export default function Index() {
                   <div className="absolute inset-0 bg-gradient-to-r from-crisis-red/20 to-crisis-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
                   <Shield className="w-8 h-8 mb-3 text-crisis-red" />
                   <h2 className="text-lg font-bold mb-2">Nuclear Crisis</h2>
-                  <p className="text-xs text-crisis-muted">
+                  <p className="text-xs text-muted-foreground">
                     Lead the nation through an imminent nuclear threat. Every second counts.
                   </p>
                 </Card>
@@ -78,7 +78,7 @@ export default function Index() {
               <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-yellow-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
               <TrendingDown className="w-8 h-8 mb-3 text-orange-500" />
               <h2 className="text-lg font-bold mb-2">Black Monday</h2>
-              <p className="text-xs text-crisis-muted">
+              <p className="text-xs text-muted-foreground">
                 Navigate a devastating market crash. Make decisions to stabilize the economy.
               </p>
             </Card>
@@ -89,7 +89,7 @@ export default function Index() {
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
               <Headset className="w-8 h-8 mb-3 text-blue-500" />
               <h2 className="text-lg font-bold mb-2">Emergency Call Center</h2>
-              <p className="text-xs text-crisis-muted">
+              <p className="text-xs text-muted-foreground">
                 Manage critical emergency calls. Coordinate response teams effectively.
               </p>
             </Card>
@@ -100,7 +100,7 @@ export default function Index() {
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
               <Settings className="w-8 h-8 mb-3 text-purple-500" />
               <h2 className="text-lg font-bold mb-2">Custom Scenario</h2>
-              <p className="text-xs text-crisis-muted">
+              <p className="text-xs text-muted-foreground">
                 Create your own crisis scenario. Define the parameters and challenges.
               </p>
             </Card>
@@ -111,7 +111,7 @@ export default function Index() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1, duration: 1 }}
-          className="text-center mt-8 text-muted-foreground text-xs"
+          className="text-center mt-8 text-muted-foreground/80 text-xs"
         >
           Select a scenario to begin the simulation
         </motion.div>
