@@ -5,7 +5,7 @@ import { loadAnthropicMessages } from '@/lib/llm';
 
 
 interface RequestInput {
-  scenarioName: string;
+  scenarioPrompt: string;
   previousMsgs: MessageParam[];
 }
 
@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
   });
 
   const reqInput: RequestInput = await req.json();
-  const { scenarioName } = reqInput;
+  const { scenarioPrompt } = reqInput;
   let { previousMsgs } = reqInput;
   if (previousMsgs.length === 0) {
     previousMsgs = [{
@@ -26,11 +26,8 @@ export async function POST(req: NextRequest) {
 
   console.log('previousMsg', previousMsgs);
 
-  const crisisMessages = loadAnthropicMessages(scenarioName)
-
-  console.log(crisisMessages);
   const crisisCompletion = await client.messages.create({
-    system: crisisMessages.system,
+    system: scenarioPrompt,
     max_tokens: 8192,
     temperature: 1,
     messages: previousMsgs,
