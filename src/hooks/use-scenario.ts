@@ -207,5 +207,6 @@ export const useScenario = (scenarioName: string, voicesMap: Record<string, stri
     handleStart: () => handleStart(messages),
     startRecording,
     stopRecording,
+    audioRef,
   };
 };

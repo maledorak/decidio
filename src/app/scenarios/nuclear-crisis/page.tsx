@@ -15,6 +15,7 @@ export default function NuclearCrisisScenario() {
     handleStart,
     startRecording,
     stopRecording,
+    audioRef,
   } = useScenario(scenarioName, actorMapsToVoices[scenarioName]);
 
 
