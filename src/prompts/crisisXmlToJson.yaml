@@ -1,7 +1,7 @@
 - role: system
   content: |
     Translate user xml into json schema
-    Generate JSON and nothing more
+    Generate JSON and nothing more!
 
     interface DialogItem {
       actor: string
@@ -11,7 +11,7 @@
       round: number
       think: string
       answer: {
-        speakers: string[
+        speakers: string[]
         dialog: DialogItem[]
       }
     }

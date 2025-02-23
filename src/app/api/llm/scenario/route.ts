@@ -48,12 +48,13 @@ export async function POST(req: NextRequest) {
   const allMessages: MessageParam[] = [...previousMsgs, { role: 'assistant', content: crisisResult.text }];
 
   const jsonMessages = loadAnthropicMessages('crisisXmlToJson', { xml: crisisResult.text });
+  console.log("LLM Json messages", jsonMessages);
   const jsonCompletion = await client.messages.create({
     system: jsonMessages.system,
     max_tokens: 8192,
     temperature: 1,
     messages: jsonMessages.rest,
-    model: 'claude-3-5-haiku-latest',
+    model: 'claude-3-5-sonnet-latest',
   });
 
   const jsonResult = jsonCompletion.content[0];
@@ -67,7 +68,7 @@ export async function POST(req: NextRequest) {
   }
   const rawJson = jsonResult.text.replace('```json', '').replace('```', '');
   const jsonOutput = JSON.parse(rawJson);
-  console.log(jsonOutput);
+  console.log("LLM Json output", jsonOutput);
 
   return new Response(JSON.stringify({ latestJsonDialog: jsonOutput, allMessages }), {
     headers: {

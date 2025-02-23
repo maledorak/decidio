@@ -15,5 +15,13 @@ export const actorMapsToVoices = {
     'police': 'roger',
     'hospital': 'harry',
     'child': 'oxley'
+  },
+  "black-monday": {
+    'narrator': 'tarun',
+    'financial_analyst': 'angry',
+    'pr_manager': 'espero',
+    'media_analyst': 'harry',
+    'stock_advisor': 'roger',
+    'personal_advisor': 'oxley'
   }
 }

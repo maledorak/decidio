@@ -76,7 +76,7 @@ export default function Index() {
           </Tooltip>
 
           <motion.div variants={itemVariants}>
-            <Link href="/scenarios/market-crisis">
+            <Link href="/scenarios/black-monday">
               <Card className="group relative p-6 text-left crisis-button glass-panel cursor-pointer">
               <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-yellow-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
               <TrendingDown className="w-8 h-8 mb-3 text-orange-500" />
