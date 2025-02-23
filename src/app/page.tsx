@@ -55,25 +55,18 @@ export default function Index() {
           animate="visible"
           className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto relative"
         >
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <motion.div variants={itemVariants}>
-                <Link href="/scenarios/nuclear-crisis">
-                  <Card className="group relative p-6 text-left crisis-button glass-panel cursor-pointer">
-                  <div className="absolute inset-0 bg-gradient-to-r from-crisis-red/20 to-crisis-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
-                  <Shield className="w-8 h-8 mb-3 text-crisis-red" />
-                  <h2 className="text-lg font-bold mb-2">Nuclear Crisis</h2>
-                  <p className="text-xs text-muted-foreground">
-                    Lead the nation through an imminent nuclear threat. Every second counts.
-                  </p>
-                  </Card>
-                </Link>
-              </motion.div>
-            </TooltipTrigger>
-            <TooltipContent side="top">
-              <p>National security crisis simulation</p>
-            </TooltipContent>
-          </Tooltip>
+          <motion.div variants={itemVariants}>
+            <Link href="/scenarios/nuclear-crisis">
+              <Card className="group relative p-6 text-left crisis-button glass-panel cursor-pointer">
+                <div className="absolute inset-0 bg-gradient-to-r from-crisis-red/20 to-crisis-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
+                <Shield className="w-8 h-8 mb-3 text-crisis-red" />
+                <h2 className="text-lg font-bold mb-2">Nuclear Crisis</h2>
+                <p className="text-xs text-muted-foreground">
+                  Lead the nation through an imminent nuclear threat. Every second counts.
+                </p>
+              </Card>
+            </Link>
+          </motion.div>
 
           <motion.div variants={itemVariants}>
             <Link href="/scenarios/black-monday">
