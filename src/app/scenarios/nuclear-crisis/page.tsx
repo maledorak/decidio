@@ -20,14 +20,16 @@ export default function NuclearCrisisScenario() {
 
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+    <div className="min-h-screen bg-gradient-to-b from-black to-crisis-dark p-4 sm:p-8 pb-20">
+      <div className="max-w-4xl mx-auto relative">
+        <div className="absolute inset-0 bg-crisis-red/5 blur-[100px] rounded-full animate-float" />
+        <main className="flex flex-col gap-8 relative z-10">
         <div className="flex flex-col space-y-4">
           {/* Main control button */}
           {currentStep === 'idle' && !recordingTranscript && (
             <button
               onClick={handleStart}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              className="crisis-button glass-panel px-6 py-3 bg-crisis-red text-crisis-light hover:bg-crisis-accent"
             >
               Start
             </button>
@@ -37,7 +39,7 @@ export default function NuclearCrisisScenario() {
           {currentStep === 'idle' && recordingTranscript === '' && dialog.length > 0 && (
             <button
               onClick={startRecording}
-              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+              className="crisis-button glass-panel px-6 py-3 bg-green-600/90 text-crisis-light hover:bg-green-700/90"
             >
               Start Speaking
             </button>
@@ -47,7 +49,7 @@ export default function NuclearCrisisScenario() {
           {currentStep === 'recording' && (
             <button
               onClick={stopRecording}
-              className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+              className="crisis-button glass-panel px-6 py-3 bg-red-600/90 text-crisis-light hover:bg-red-700/90"
               disabled={recordingProcessing}
             >
               Stop Speaking
@@ -56,8 +58,8 @@ export default function NuclearCrisisScenario() {
 
           {/* Status indicators */}
           {currentStep === 'generating' && (
-            <div className="flex items-center text-gray-600">
-              <div className="animate-spin mr-2 h-5 w-5 border-t-2 border-b-2 border-gray-900 rounded-full"></div>
+            <div className="glass-panel p-4 text-crisis-light/80 flex items-center">
+              <div className="animate-spin mr-3 h-5 w-5 border-t-2 border-b-2 border-crisis-light rounded-full" />
               Generating dialog...
             </div>
           )}
@@ -78,7 +80,7 @@ export default function NuclearCrisisScenario() {
 
           {/* Error messages */}
           {generationError && (
-            <div className="p-4 bg-red-100 text-red-700 rounded">{generationError}</div>
+            <div className="glass-panel p-4 text-red-300 border border-red-500/30">{generationError}</div>
           )}
 
           {audioError && (
@@ -91,16 +93,15 @@ export default function NuclearCrisisScenario() {
 
           {/* Transcription result */}
           {recordingTranscript && (
-            <div className="mt-6">
-              <h2 className="text-xl font-semibold mb-3">Transcription:</h2>
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <p className="whitespace-pre-wrap">{recordingTranscript}</p>
-              </div>
+            <div className="mt-6 glass-panel p-6 relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-crisis-red/20 to-crisis-accent/20 opacity-30 rounded-lg" />
+              <h2 className="text-lg font-bold mb-3 text-crisis-light">Transcription:</h2>
+              <p className="whitespace-pre-wrap text-crisis-light/90">{recordingTranscript}</p>
             </div>
           )}
         </div>
 
-        <audio ref={audioRef} hidden />
+        <audio ref={audioRef} className="w-full glass-panel p-4 mt-8" controls />
       </main>
     </div>
   );
