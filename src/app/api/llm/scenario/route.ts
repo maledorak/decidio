@@ -5,6 +5,7 @@ import { loadAnthropicMessages } from '@/lib/llm';
 
 
 interface RequestInput {
+  scenarioName: string;
   previousMsgs: MessageParam[];
 }
 
@@ -13,7 +14,7 @@ export async function POST(req: NextRequest) {
     apiKey: process.env['ANTHROPIC_API_KEY'],
   });
 
-  let { previousMsgs }: RequestInput = await req.json();
+  let { previousMsgs, scenarioName }: RequestInput = await req.json();
   if (previousMsgs.length === 0) {
     previousMsgs = [{
       role: 'user',
@@ -23,7 +24,7 @@ export async function POST(req: NextRequest) {
 
   console.log('previousMsg', previousMsgs);
 
-  const crisisMessages = loadAnthropicMessages('crisis.v2')
+  const crisisMessages = loadAnthropicMessages(scenarioName)
 
   console.log(crisisMessages);
   const crisisCompletion = await client.messages.create({
@@ -46,7 +47,7 @@ export async function POST(req: NextRequest) {
 
   const allMessages: MessageParam[] = [...previousMsgs, { role: 'assistant', content: crisisResult.text }];
 
-  const jsonMessages = loadAnthropicMessages('crisisXmlToJson.v1', { xml: crisisResult.text });
+  const jsonMessages = loadAnthropicMessages('crisisXmlToJson', { xml: crisisResult.text });
   const jsonCompletion = await client.messages.create({
     system: jsonMessages.system,
     max_tokens: 8192,

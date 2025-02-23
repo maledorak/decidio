@@ -9,8 +9,8 @@ interface GenerateDialogResult {
   allMessages: MessageParam[];
 }
 
-export default function NuclearCrisisScenario() {
-  const scenarioName = 'nuclear-crisis';
+export default function EmergencyCenterScenario() {
+  const scenarioName = 'emergency-center';
   const voicesMap = actorMapsToVoices[scenarioName];
 
   // Flow state

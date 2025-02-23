@@ -7,5 +7,13 @@ export const actorMapsToVoices = {
     'Secretary_of_Defense':'roger',
     'Foreign_Minister':'oxley',
     'Press_Secretary':'espero'
+  },
+  "emergency-center": {
+    'narrator': 'tarun',
+    'distressed_caller': 'espero',
+    'abuser': 'angry',
+    'police': 'roger',
+    'hospital': 'harry',
+    'child': 'oxley'
   }
 }
