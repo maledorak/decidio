@@ -34,7 +34,7 @@ export default function NuclearCrisisScenario() {
           </header>
           <div className="flex flex-col space-y-4 items-center text-center">
           {/* Main control button */}
-          {currentStep === 'idle' && !recordingTranscript && (
+          {currentStep === 'idle' && dialog.length === 0 && (
             <button
               onClick={handleStart}
               className="crisis-button glass-panel px-6 py-3 bg-crisis-red text-crisis-light hover:bg-crisis-accent"
@@ -44,7 +44,7 @@ export default function NuclearCrisisScenario() {
           )}
 
           {/* Start Speaking button */}
-          {currentStep === 'idle' && recordingTranscript === '' && dialog.length > 0 && (
+          {currentStep === 'idle' && dialog.length > 0 && (
             <button
               onClick={startRecording}
               className="crisis-button glass-panel px-6 py-3 bg-green-600/90 text-crisis-light hover:bg-green-700/90"
