@@ -2,6 +2,7 @@
 import { useScenario } from "@/hooks/use-scenario";
 import { actorMapsToVoices } from "@/config";
 
+
 export default function NuclearCrisisScenario() {
   const scenarioName = 'nuclear-crisis';
   const {
@@ -99,7 +100,7 @@ export default function NuclearCrisisScenario() {
           {recordingError && (
             <div className="p-4 bg-red-100 text-red-700 rounded">{recordingError}</div>
           )}
-        
+
         </div>
         </div>
 
