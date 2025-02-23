@@ -31,7 +31,7 @@ export default function EmergencyCenterScenario() {
               Emergency response simulation
             </p>
           </header>
-          <div className="glass-panel p-6 sm:p-8 rounded-2xl border border-white/10">
+          <div className="p-6 sm:p-8">
             <div className="flex flex-col space-y-4 items-center text-center">
           {/* Main control button */}
           {currentStep === 'idle' && dialog.length === 0 && (
@@ -108,6 +108,7 @@ export default function EmergencyCenterScenario() {
               </div>
             </div>
           )} */}
+        </div>
         </div>
 
         <audio ref={audioRef} hidden />

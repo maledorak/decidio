@@ -32,7 +32,7 @@ export default function BlackMondayScenario() {
               Navigate a devastating market crash. Make decisions to stabilize the economy.
             </p>
           </header>
-          <div className="glass-panel p-6 sm:p-8 rounded-2xl border border-white/10">
+          <div className="p-6 sm:p-8">
             <div className="flex flex-col space-y-4 items-center text-center">
           {/* Main control button */}
           {currentStep === 'idle' && dialog.length === 0 && (
@@ -108,6 +108,7 @@ export default function BlackMondayScenario() {
               <p className="whitespace-pre-wrap text-crisis-light/90">{recordingTranscript}</p>
             </div>
           )} */}
+        </div>
         </div>
 
         <audio ref={audioRef} hidden />

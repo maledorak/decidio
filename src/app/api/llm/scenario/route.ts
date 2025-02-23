@@ -14,7 +14,9 @@ export async function POST(req: NextRequest) {
     apiKey: process.env['ANTHROPIC_API_KEY'],
   });
 
-  let { previousMsgs, scenarioName }: RequestInput = await req.json();
+  const reqInput: RequestInput = await req.json();
+  const { scenarioName } = reqInput;
+  let { previousMsgs } = reqInput;
   if (previousMsgs.length === 0) {
     previousMsgs = [{
       role: 'user',
