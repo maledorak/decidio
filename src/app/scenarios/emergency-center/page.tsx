@@ -99,18 +99,19 @@ export default function EmergencyCenterScenario() {
           )}
 
           {/* Transcription result */}
-          {recordingTranscript && (
+          {/* {recordingTranscript && (
             <div className="mt-6">
               <h2 className="text-xl font-semibold mb-3">Transcription:</h2>
               <div className="bg-gray-50 p-4 rounded-lg">
                 <p className="whitespace-pre-wrap">{recordingTranscript}</p>
               </div>
             </div>
-          )}
+          )} */}
         </div>
 
         <audio ref={audioRef} hidden />
       </main>
     </div>
+  </div>
   );
 }
