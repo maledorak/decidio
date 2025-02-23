@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { type MessageParam } from '@anthropic-ai/sdk/resources/messages/messages';
 import { DialogItem } from "@/types";
+import { voicesDescriptions } from "@/config";
 
 export const useCustomScenario = () => {
   // Flow state
@@ -34,19 +35,19 @@ export const useCustomScenario = () => {
       const response = await fetch("/api/llm/custom-generator", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           scenarioDescription,
-          voicesMap: {}
+          voicesMap: voicesDescriptions
         }),
       });
 
       if (!response.ok) throw new Error('Failed to generate scenario');
-      
+
       const data = await response.json();
       setGeneratedPrompt(data.prompt);
       setGeneratedVoicesMap(data.voicesMap);
       setScenarioGenerated(true);
-      
+
     } catch (error) {
       setGenerationError(error instanceof Error ? error.message : 'Scenario generation failed');
       throw error;
@@ -56,16 +57,16 @@ export const useCustomScenario = () => {
   const generateDialog = async (messagesToUse: MessageParam[]) => {
     try {
       if (!generatedPrompt) throw new Error('No scenario generated');
-      
+
       setGenerationError(null);
       setCurrentStep('generating');
 
       const response = await fetch("/api/llm/custom-runner", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           previousMsgs: messagesToUse,
-          scenarioPrompt: generatedPrompt 
+          scenarioPrompt: generatedPrompt
         }),
       });
 

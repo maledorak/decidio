@@ -26,15 +26,18 @@ export async function POST(req: NextRequest) {
 
   console.log('Scenario description', scenarioDescription);
   const voicesMapJson = JSON.stringify(voicesMap);
+  console.log('Voices map', voicesMapJson);
 
-  const generatorMessages = loadAnthropicMessages('custom-scenario-gen', { scenarioDescription, voicesMap: voicesMapJson });
+  const generatorMessages = loadAnthropicMessages('custom-scenario-gen-v2');
 
   console.log('Generator messages', generatorMessages);
   const generatorCompletion = await client.messages.create({
     system: generatorMessages.system,
     max_tokens: 8192,
     temperature: 1,
-    messages: generatorMessages.rest,
+    messages: [
+      { role: "user", content: `<scenario_description>${scenarioDescription}</scenario_description> <voices_map>${voicesMapJson}</voices_map>`},
+    ],
     model: 'claude-3-5-sonnet-latest',
   });
 
@@ -48,22 +51,47 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  const xmlResult = extractXml<GeneratorOutput>(crisisResult.text)
-  if (!xmlResult.data) {
-    return new Response(JSON.stringify({ error: 'Failed to extract XML' }), {
+  // Convert the XML dialogue response to JSON
+  // Using XML because JSON lover the
+  const jsonMessages = loadAnthropicMessages('crisisXmlToJsonCustom', { xml: crisisResult.text });
+  console.log("LLM Json messages", jsonMessages);
+  const jsonCompletion = await client.messages.create({
+    system: jsonMessages.system,
+    max_tokens: 8192,
+    temperature: 1,
+    messages: jsonMessages.rest,
+    model: 'claude-3-5-haiku-latest',
+  });
+
+  const jsonResult = jsonCompletion.content[0];
+  if (jsonResult.type !== 'text') {
+    return new Response(JSON.stringify({ error: 'Unexpected json response type' }), {
       status: 500,
       headers: {
         'Content-Type': 'application/json',
       },
     });
   }
-  const voices_map = JSON.parse(xmlResult.data.meta_output.voices);
-  const scenario_prompt = JSON.parse(xmlResult.data.meta_output.prompt);
+  const rawJson = jsonResult.text.replace('```json', '').replace('```', '');
+  const jsonOutput: GeneratorOutput = JSON.parse(rawJson);
 
-  console.log("LLM Voices map", voicesMap);
-  console.log("LLM Scenario prompt", scenario_prompt);
+  // const xmlResult = extractXml<GeneratorOutput>(crisisResult.text)
+  // console.log("XML Result", xmlResult);
+  // if (!xmlResult.data) {
+  //   return new Response(JSON.stringify({ error: 'Failed to extract XML' }), {
+  //     status: 500,
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //   });
+  // }
+  const outputVoicesMap = JSON.parse(jsonOutput.meta_output.voices);
+  const scenarioPrompt = jsonOutput.meta_output.prompt;
 
-  return new Response(JSON.stringify({ voicesMap, prompt: scenario_prompt}), {
+  console.log("LLM Voices map", outputVoicesMap);
+  console.log("LLM Scenario prompt", scenarioPrompt);
+
+  return new Response(JSON.stringify({ voicesMap: outputVoicesMap, prompt: scenarioPrompt}), {
     headers: {
       'Content-Type': 'application/json',
     },

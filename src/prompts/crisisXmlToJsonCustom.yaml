@@ -1,0 +1,22 @@
+- role: system
+  content: |
+    Translate user xml with following xml keys into json schema
+
+    Input:
+    <meta_output>
+      <voices>string</voices>
+      <prompt>string</prompt>
+    </meta_output> 
+
+    Output:
+    interface GeneratorOutput {
+      meta_output: {
+        voices: string
+        prompt: string
+      }
+    }
+    Generate JSON and nothing more!
+
+- role: user
+  content: |
+    {{xml}}
