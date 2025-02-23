@@ -20,19 +20,20 @@ export default function NuclearCrisisScenario() {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black to-crisis-dark p-4 sm:p-8 pb-20">
-      <div className="max-w-4xl mx-auto relative">
-        <div className="absolute inset-0 bg-crisis-red/5 blur-[100px] rounded-full animate-float" />
+    <div className="min-h-screen bg-gradient-to-b from-black to-crisis-dark p-4 flex items-center justify-center">
+      <div className="max-w-3xl w-full relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-crisis-red/20 to-crisis-accent/20 blur-[100px] opacity-30 rounded-full animate-float" />
         <main className="flex flex-col gap-8 relative z-10">
-          <header className="text-center mb-8">
-            <h1 className="text-2xl font-bold tracking-tight mb-2 text-crisis-light">
+          <header className="text-center">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2 text-crisis-light animate-glow tracking-tight">
               Nuclear Crisis
             </h1>
-            <p className="text-sm text-crisis-light/80">
+            <p className="text-muted-foreground text-sm md:text-base">
               Simulated national security scenario
             </p>
           </header>
-          <div className="flex flex-col space-y-4 items-center text-center">
+          <div className="glass-panel p-6 sm:p-8 rounded-2xl border border-white/10">
+            <div className="flex flex-col space-y-4 items-center text-center">
           {/* Main control button */}
           {currentStep === 'idle' && dialog.length === 0 && (
             <button
