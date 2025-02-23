@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Shield, TrendingDown, Headset, Settings } from "lucide-react";
+import { Footer } from "@/components/footer";
 import { Card } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -31,7 +32,7 @@ export default function Index() {
   };
 
   return (
-    <div className="h-screen bg-crisis-dark text-crisis-light p-4 flex items-center justify-center bg-gradient-to-b from-black to-crisis-dark">
+    <div className="h-screen bg-crisis-dark text-crisis-light p-4 flex items-center justify-center bg-gradient-to-b from-black to-crisis-dark relative">
       <div className="max-w-3xl w-full relative">
         <div className="absolute inset-0 bg-crisis-red/5 blur-[100px] rounded-full animate-float" />
 
@@ -117,6 +118,7 @@ export default function Index() {
           Select a scenario to begin the simulation
         </motion.div>
       </div>
+      <Footer />
     </div>
   );
 }
