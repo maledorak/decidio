@@ -28,7 +28,7 @@ export default function NuclearCrisisScenario() {
         href="/"
         className="absolute left-20 top-[10%] text-2xl md:text-3xl font-bold tracking-tight hover:text-crisis-red transition-colors animate-glow z-50"
       >
-        decideio
+        decidio
       </Link>
       <div className="max-w-3xl w-full relative">
         <div className="absolute inset-0 bg-gradient-to-r from-crisis-red/20 to-crisis-accent/20 blur-[100px] opacity-30 rounded-full animate-float" />
