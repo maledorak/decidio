@@ -1,6 +1,7 @@
 "use client";
 import { useScenario } from "@/hooks/use-scenario";
 import { actorMapsToVoices } from "@/config";
+import Link from "next/link";
 
 export default function EmergencyCenterScenario() {
   const scenarioName = 'emergency-center';
@@ -20,6 +21,12 @@ export default function EmergencyCenterScenario() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-black to-crisis-dark p-4 flex items-center justify-center">
+      <Link
+        href="/"
+        className="absolute left-20 top-[10%] text-2xl md:text-3xl font-bold tracking-tight hover:text-crisis-red transition-colors animate-glow z-50"
+      >
+        decideio
+      </Link>
       <div className="max-w-3xl w-full relative">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 blur-[100px] opacity-30 rounded-full animate-float" />
         <main className="flex flex-col gap-8 relative z-10">
