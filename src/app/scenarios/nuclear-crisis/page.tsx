@@ -99,15 +99,7 @@ export default function NuclearCrisisScenario() {
           {recordingError && (
             <div className="p-4 bg-red-100 text-red-700 rounded">{recordingError}</div>
           )}
-
-          {/* Transcription result */}
-          {/* {recordingTranscript && (
-            <div className="mt-6 glass-panel p-6 relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-crisis-red/20 to-crisis-accent/20 opacity-30 rounded-lg" />
-              <h2 className="text-lg font-bold mb-3 text-crisis-light">Transcription:</h2>
-              <p className="whitespace-pre-wrap text-crisis-light/90">{recordingTranscript}</p>
-            </div>
-          )} */}
+        
         </div>
         </div>
 

@@ -42,7 +42,7 @@ export default function Index() {
           className="text-center mb-8 relative z-10"
         >
           <h1 className="text-3xl md:text-5xl font-bold mb-3 animate-glow tracking-tight">
-            decide.io
+            decideio
           </h1>
           <p className="text-muted-foreground text-xs md:text-sm max-w-md mx-auto">
             Simulate critical scenarios. Make impactful decisions. Handle the consequences.

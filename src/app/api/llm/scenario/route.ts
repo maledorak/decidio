@@ -49,6 +49,8 @@ export async function POST(req: NextRequest) {
 
   const allMessages: MessageParam[] = [...previousMsgs, { role: 'assistant', content: crisisResult.text }];
 
+  // Convert the XML dialogue response to JSON
+  // Using XML because JSON lover the 
   const jsonMessages = loadAnthropicMessages('crisisXmlToJson', { xml: crisisResult.text });
   console.log("LLM Json messages", jsonMessages);
   const jsonCompletion = await client.messages.create({

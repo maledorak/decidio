@@ -1,8 +1,6 @@
 import { ElevenLabsClient } from "elevenlabs";
-import { NextResponse, NextRequest } from 'next/server';
-import { generateSpeach } from '@/providers/voice/tts';
-
-import { elevenLabsVoices } from "@/providers/voice/voices";
+import { NextRequest } from 'next/server';
+import { elevenLabsVoices } from "@/config";
 
 interface DialogItem {
   actor: string;
