@@ -101,8 +101,9 @@ export default function NuclearCrisisScenario() {
           )}
         </div>
 
-        <audio ref={audioRef} className="w-full glass-panel p-4 mt-8" controls />
+        <audio ref={audioRef} hidden />
       </main>
     </div>
-  );
+  </div>
+);
 }
