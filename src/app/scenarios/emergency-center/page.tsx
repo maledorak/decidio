@@ -19,14 +19,24 @@ export default function EmergencyCenterScenario() {
   } = useScenario(scenarioName, actorMapsToVoices[scenarioName]);
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <div className="flex flex-col space-y-4">
+    <div className="min-h-screen bg-gradient-to-b from-black to-crisis-dark p-4 sm:p-8 pb-20">
+      <div className="max-w-4xl mx-auto relative">
+        <div className="absolute inset-0 bg-crisis-red/5 blur-[100px] rounded-full animate-float" />
+        <main className="flex flex-col gap-8 relative z-10">
+          <header className="text-center mb-8">
+            <h1 className="text-2xl font-bold tracking-tight mb-2 text-crisis-light">
+              Emergency Center
+            </h1>
+            <p className="text-sm text-crisis-light/80">
+              Emergency response simulation
+            </p>
+          </header>
+          <div className="flex flex-col space-y-4 items-center text-center">
           {/* Main control button */}
           {currentStep === 'idle' && !recordingTranscript && (
             <button
               onClick={handleStart}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              className="crisis-button glass-panel px-6 py-3 bg-crisis-red text-crisis-light hover:bg-crisis-accent"
             >
               Start
             </button>
@@ -36,7 +46,7 @@ export default function EmergencyCenterScenario() {
           {currentStep === 'idle' && recordingTranscript === '' && dialog.length > 0 && (
             <button
               onClick={startRecording}
-              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+              className="crisis-button glass-panel px-6 py-3 bg-green-600/90 text-crisis-light hover:bg-green-700/90"
             >
               Start Speaking
             </button>
@@ -46,7 +56,7 @@ export default function EmergencyCenterScenario() {
           {currentStep === 'recording' && (
             <button
               onClick={stopRecording}
-              className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+              className="crisis-button glass-panel px-6 py-3 bg-red-600/90 text-crisis-light hover:bg-red-700/90"
               disabled={recordingProcessing}
             >
               Stop Speaking

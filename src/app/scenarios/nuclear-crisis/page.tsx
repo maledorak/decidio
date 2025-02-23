@@ -24,7 +24,15 @@ export default function NuclearCrisisScenario() {
       <div className="max-w-4xl mx-auto relative">
         <div className="absolute inset-0 bg-crisis-red/5 blur-[100px] rounded-full animate-float" />
         <main className="flex flex-col gap-8 relative z-10">
-        <div className="flex flex-col space-y-4">
+          <header className="text-center mb-8">
+            <h1 className="text-2xl font-bold tracking-tight mb-2 text-crisis-light">
+              Nuclear Crisis
+            </h1>
+            <p className="text-sm text-crisis-light/80">
+              Simulated national security scenario
+            </p>
+          </header>
+          <div className="flex flex-col space-y-4 items-center text-center">
           {/* Main control button */}
           {currentStep === 'idle' && !recordingTranscript && (
             <button
