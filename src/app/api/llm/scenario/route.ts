@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
   const allMessages: MessageParam[] = [...previousMsgs, { role: 'assistant', content: crisisResult.text }];
 
   // Convert the XML dialogue response to JSON
-  // Using XML because JSON lover the 
+  // Using XML because JSON lover the
   const jsonMessages = loadAnthropicMessages('crisisXmlToJson', { xml: crisisResult.text });
   console.log("LLM Json messages", jsonMessages);
   const jsonCompletion = await client.messages.create({
@@ -72,6 +72,17 @@ export async function POST(req: NextRequest) {
   }
   const rawJson = jsonResult.text.replace('```json', '').replace('```', '');
   const jsonOutput = JSON.parse(rawJson);
+
+  // Process dialog items to remove asterisked text from non-narrator actors
+  if (jsonOutput.answer?.dialog) {
+    jsonOutput.answer.dialog.forEach((dialogItem: any) => {
+      if (dialogItem.actor && dialogItem.actor !== 'narrator' && dialogItem.text) {
+        // Remove text within asterisks and trim whitespace
+        dialogItem.text = dialogItem.text.replace(/\*.*?\*/g, '').trim();
+      }
+    });
+  }
+
   console.log("LLM Json output", jsonOutput);
 
   return new Response(JSON.stringify({ latestJsonDialog: jsonOutput, allMessages }), {
