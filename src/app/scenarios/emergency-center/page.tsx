@@ -2,6 +2,7 @@
 import { useScenario } from "@/hooks/use-scenario";
 import { actorMapsToVoices } from "@/config";
 import Link from "next/link";
+import { Footer } from "@/components/footer";
 
 export default function EmergencyCenterScenario() {
   const scenarioName = 'emergency-center';
@@ -121,6 +122,7 @@ export default function EmergencyCenterScenario() {
         <audio ref={audioRef} hidden />
       </main>
     </div>
+    <Footer />
   </div>
   );
 }

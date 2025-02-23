@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useScenario } from "@/hooks/use-scenario";
 import { actorMapsToVoices } from "@/config";
+import { Footer } from "@/components/footer";
 
 
 export default function NuclearCrisisScenario() {
@@ -114,6 +115,7 @@ export default function NuclearCrisisScenario() {
         <audio ref={audioRef} hidden />
       </main>
     </div>
+    <Footer />
   </div>
 );
 }
